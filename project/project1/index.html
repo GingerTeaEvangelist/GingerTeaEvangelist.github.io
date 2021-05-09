@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Ozioma Akahara" />
+    
+    <link rel="shortcut icon" type="image/x-icon" href="../../img/favicon.ico">
+    <title>Project 1</title>
+    <meta name="generator" content="Hugo 0.83.1" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../../css/main.css" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,200bold,400old" />
+    
+    <!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+    
+  </head>
+
+  <body>
+    <div id="wrap">
+      
+      <nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="../../"><i class="fa fa-home"></i></a>
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="navbar-collapse collapse" id="navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+        <li><a href="../../post/">BLOG</a></li>
+        
+        <li><a href="../../projects/">PROJECTS</a></li>
+        
+        <li><a href="../../resume/">RESUME</a></li>
+        
+      
+      </ul>
+    </div>
+  </div>
+</nav>
+
+      <div class="container">
+        <div class="blog-post">
+          <h3>
+            <strong><a href="../../project/project1/">Project 1</a></strong>
+          </h3>
+        </div>
+ 
+<div class="blog-title">
+          <h4>
+         January 1, 0001 
+            &nbsp;&nbsp;
+            
+          </h4>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="blogpost">
+              
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>The two data sets I used are “murder_2015_final” and “police_locals”.The “murder_2015_final” data set (m15f) contained five variables (two character and three numeric), and it had eighty-three observations. After tidying, the number of variables remained five (three character and two numerical), and it had a hundred and sixty-six observations. The “police_locals” data set (pl) contained eight variables (one character and seven numeric), and it had seventy-five observations. After tidying, it had four variables (two character and two numerical), and it had four hundred and fifty observations. The “police_local” data set was acquired using calculations based on the U.S. Census, and this data set was interesting to me because it was compiled in response to the racially driven Ferguson protests that occurred in Missouri; the creators of the data set reasoned that if Ferguson had a huge racial gap in its population it should also be reflected in the police force assuming that they were locals. This reasoning caused the creators to compile a data set questioning the living situations of police in major cities. The “murder_2015_final” data set was acquired from the FBI crime data, this data was interesting to me because I was curious to see if force size (gotten from the police_locals data set) would have an effect on murders. I would expect that large police forces would have fewer murder cases or at least a negative change in murders between 2014 and 2015.</p>
+<pre class="r"><code>library(fivethirtyeight)
+library(tidyverse)
+write_csv(murder_2015_final, &quot;m15f.csv&quot;)
+getwd()</code></pre>
+<pre><code>## [1] &quot;/stor/home/oaa847/website/content/project&quot;</code></pre>
+<pre class="r"><code>m15f &lt;- read_csv(&quot;m15f.csv&quot;)
+str(m15f)</code></pre>
+<pre><code>## tibble [83 × 5] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+##  $ city        : chr [1:83] &quot;Baltimore&quot; &quot;Chicago&quot; &quot;Houston&quot; &quot;Cleveland&quot; ...
+##  $ state       : chr [1:83] &quot;Maryland&quot; &quot;Illinois&quot; &quot;Texas&quot; &quot;Ohio&quot; ...
+##  $ murders_2014: num [1:83] 211 411 242 63 105 90 248 78 41 159 ...
+##  $ murders_2015: num [1:83] 344 478 303 120 162 145 280 109 72 188 ...
+##  $ change      : num [1:83] 133 67 61 57 57 55 32 31 31 29 ...
+##  - attr(*, &quot;spec&quot;)=
+##   .. cols(
+##   ..   city = col_character(),
+##   ..   state = col_character(),
+##   ..   murders_2014 = col_double(),
+##   ..   murders_2015 = col_double(),
+##   ..   change = col_double()
+##   .. )</code></pre>
+<pre class="r"><code>write_csv(police_locals, &quot;pl.csv&quot;)
+getwd()</code></pre>
+<pre><code>## [1] &quot;/stor/home/oaa847/website/content/project&quot;</code></pre>
+<pre class="r"><code>pl &lt;- read_csv(&quot;pl.csv&quot;)
+str(pl)</code></pre>
+<pre><code>## tibble [75 × 8] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+##  $ city      : chr [1:75] &quot;New York&quot; &quot;Chicago&quot; &quot;Los Angeles&quot; &quot;Washington&quot; ...
+##  $ force_size: num [1:75] 32300 12120 10100 9340 7700 ...
+##  $ all       : num [1:75] 0.618 0.875 0.228 0.116 0.292 ...
+##  $ white     : num [1:75] 0.4464 0.872 0.1528 0.0568 0.1737 ...
+##  $ non_white : num [1:75] 0.764 0.877 0.264 0.157 0.399 ...
+##  $ black     : num [1:75] 0.771 0.897 0.387 0.17 0.366 ...
+##  $ hispanic  : num [1:75] 0.7629 0.8398 0.2177 0.0899 0.4571 ...
+##  $ asian     : num [1:75] 0.749 0.967 0.305 0.231 0.408 ...
+##  - attr(*, &quot;spec&quot;)=
+##   .. cols(
+##   ..   city = col_character(),
+##   ..   force_size = col_double(),
+##   ..   all = col_double(),
+##   ..   white = col_double(),
+##   ..   non_white = col_double(),
+##   ..   black = col_double(),
+##   ..   hispanic = col_double(),
+##   ..   asian = col_double()
+##   .. )</code></pre>
+</div>
+<div id="reshaping-data-sets" class="section level2">
+<h2>Reshaping data sets</h2>
+<p>For both data sets, I noticed that there were several variables that could be grouped together under a column. So for the “pl” data set, I used “pivot_longer” to group the variables: all, white, non_white, black, hispanic and asian, under a new variable that I called “race” and I put their values in a new variable called “perc_in” which means the percentages of the police depending on race that are locals in their city; this new tidy data set was termed “pl_tidy”. Then for the “m15f” data set, I used “pivot_longer” to group the variables: murders_2014, murders_2015, under a new variable that I called “year” and I used the “separate function” to rename the observations in the column into “2014” and “2015”; this new tidy data set was termed “m15f_tidy”. I noticed after tidying this data set that the variable “year” was numeric, but I wanted it to be a character variable so I used ‘as.character’ to make it one.</p>
+<pre class="r"><code>pl_tidy &lt;- pl %&gt;% pivot_longer(all:asian, names_to = &quot;race&quot;, 
+    values_to = &quot;perc_in&quot;)
+str(pl_tidy)</code></pre>
+<pre><code>## tibble [450 × 4] (S3: tbl_df/tbl/data.frame)
+##  $ city      : chr [1:450] &quot;New York&quot; &quot;New York&quot; &quot;New York&quot; &quot;New York&quot; ...
+##  $ force_size: num [1:450] 32300 32300 32300 32300 32300 ...
+##  $ race      : chr [1:450] &quot;all&quot; &quot;white&quot; &quot;non_white&quot; &quot;black&quot; ...
+##  $ perc_in   : num [1:450] 0.618 0.446 0.764 0.771 0.763 ...</code></pre>
+<pre class="r"><code>m15f_tidy &lt;- m15f %&gt;% pivot_longer(3:4, names_to = &quot;years&quot;, values_to = &quot;total_murders&quot;) %&gt;% 
+    separate(years, into = c(NA, &quot;year&quot;), sep = 8, convert = T)
+m15f_tidy$year &lt;- as.character(m15f_tidy$year)
+str(m15f_tidy)</code></pre>
+<pre><code>## tibble [166 × 5] (S3: tbl_df/tbl/data.frame)
+##  $ city         : chr [1:166] &quot;Baltimore&quot; &quot;Baltimore&quot; &quot;Chicago&quot; &quot;Chicago&quot; ...
+##  $ state        : chr [1:166] &quot;Maryland&quot; &quot;Maryland&quot; &quot;Illinois&quot; &quot;Illinois&quot; ...
+##  $ change       : num [1:166] 133 133 67 67 61 61 57 57 57 57 ...
+##  $ year         : chr [1:166] &quot;2014&quot; &quot;2015&quot; &quot;2014&quot; &quot;2015&quot; ...
+##  $ total_murders: num [1:166] 211 344 411 478 242 303 63 120 105 162 ...</code></pre>
+</div>
+<div id="joining-data-sets" class="section level2">
+<h2>Joining data sets</h2>
+<p>I performed an inner join on the tidy versions of the two data sets; I joined these data set by “city”. This resulted in eight variables and three hundred and twenty-four observations; the joined data set was termed “m_pl”.I used anti join to find that there were a hundred and twelve observations dropped from the joined data set and this is because these observations didn’t have a match in either of the original data sets. I used inner join specifically because I wanted to see whether force size had an impact on the occurrence of murders in states across USA, so I only needed observations with matches. However, these dropped observations could skew the results I get from my summary statistics (i.e. mean, percentile, and so on) and graph visualizations since a lot of data was removed.</p>
+<pre class="r"><code>m_pl &lt;- m15f_tidy %&gt;% inner_join(pl_tidy, by = &quot;city&quot;)
+str(m_pl)</code></pre>
+<pre><code>## tibble [324 × 8] (S3: tbl_df/tbl/data.frame)
+##  $ city         : chr [1:324] &quot;Baltimore&quot; &quot;Baltimore&quot; &quot;Baltimore&quot; &quot;Baltimore&quot; ...
+##  $ state        : chr [1:324] &quot;Maryland&quot; &quot;Maryland&quot; &quot;Maryland&quot; &quot;Maryland&quot; ...
+##  $ change       : num [1:324] 133 133 133 133 133 133 133 133 133 133 ...
+##  $ year         : chr [1:324] &quot;2014&quot; &quot;2014&quot; &quot;2014&quot; &quot;2014&quot; ...
+##  $ total_murders: num [1:324] 211 211 211 211 211 211 344 344 344 344 ...
+##  $ force_size   : num [1:324] 2800 2800 2800 2800 2800 2800 2800 2800 2800 2800 ...
+##  $ race         : chr [1:324] &quot;all&quot; &quot;white&quot; &quot;non_white&quot; &quot;black&quot; ...
+##  $ perc_in      : num [1:324] 0.257 0.133 0.362 0.391 NA ...</code></pre>
+<pre class="r"><code>m15f_tidy %&gt;% distinct() %&gt;% str()</code></pre>
+<pre><code>## tibble [166 × 5] (S3: tbl_df/tbl/data.frame)
+##  $ city         : chr [1:166] &quot;Baltimore&quot; &quot;Baltimore&quot; &quot;Chicago&quot; &quot;Chicago&quot; ...
+##  $ state        : chr [1:166] &quot;Maryland&quot; &quot;Maryland&quot; &quot;Illinois&quot; &quot;Illinois&quot; ...
+##  $ change       : num [1:166] 133 133 67 67 61 61 57 57 57 57 ...
+##  $ year         : chr [1:166] &quot;2014&quot; &quot;2015&quot; &quot;2014&quot; &quot;2015&quot; ...
+##  $ total_murders: num [1:166] 211 344 411 478 242 303 63 120 105 162 ...</code></pre>
+<pre class="r"><code>m_pl %&gt;% distinct() %&gt;% str()</code></pre>
+<pre><code>## tibble [324 × 8] (S3: tbl_df/tbl/data.frame)
+##  $ city         : chr [1:324] &quot;Baltimore&quot; &quot;Baltimore&quot; &quot;Baltimore&quot; &quot;Baltimore&quot; ...
+##  $ state        : chr [1:324] &quot;Maryland&quot; &quot;Maryland&quot; &quot;Maryland&quot; &quot;Maryland&quot; ...
+##  $ change       : num [1:324] 133 133 133 133 133 133 133 133 133 133 ...
+##  $ year         : chr [1:324] &quot;2014&quot; &quot;2014&quot; &quot;2014&quot; &quot;2014&quot; ...
+##  $ total_murders: num [1:324] 211 211 211 211 211 211 344 344 344 344 ...
+##  $ force_size   : num [1:324] 2800 2800 2800 2800 2800 2800 2800 2800 2800 2800 ...
+##  $ race         : chr [1:324] &quot;all&quot; &quot;white&quot; &quot;non_white&quot; &quot;black&quot; ...
+##  $ perc_in      : num [1:324] 0.257 0.133 0.362 0.391 NA ...</code></pre>
+<pre class="r"><code>pl_tidy %&gt;% distinct() %&gt;% str()</code></pre>
+<pre><code>## tibble [450 × 4] (S3: tbl_df/tbl/data.frame)
+##  $ city      : chr [1:450] &quot;New York&quot; &quot;New York&quot; &quot;New York&quot; &quot;New York&quot; ...
+##  $ force_size: num [1:450] 32300 32300 32300 32300 32300 ...
+##  $ race      : chr [1:450] &quot;all&quot; &quot;white&quot; &quot;non_white&quot; &quot;black&quot; ...
+##  $ perc_in   : num [1:450] 0.618 0.446 0.764 0.771 0.763 ...</code></pre>
+<pre class="r"><code>m15f_tidy %&gt;% anti_join(pl_tidy, by = &quot;city&quot;) %&gt;% distinct()</code></pre>
+<pre><code>## # A tibble: 112 x 5
+##    city          state     change year  total_murders
+##    &lt;chr&gt;         &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt;
+##  1 Kansas City   Missouri      31 2014             78
+##  2 Kansas City   Missouri      31 2015            109
+##  3 Nashville     Tennessee     31 2014             41
+##  4 Nashville     Tennessee     31 2015             72
+##  5 Oklahoma City Oklahoma      28 2014             45
+##  6 Oklahoma City Oklahoma      28 2015             73
+##  7 Louisville    Kentucky      25 2014             56
+##  8 Louisville    Kentucky      25 2015             81
+##  9 Orlando       Florida       17 2014             15
+## 10 Orlando       Florida       17 2015             32
+## # … with 102 more rows</code></pre>
+</div>
+<div id="summary-statistics-for-joined-data" class="section level2">
+<h2>Summary statistics for joined data</h2>
+<p>Using summarise_all, I found that there are 27 unique cities and 21 unique states in the m_pl data set. Using mutate to add a column for murder percentile and arrange to sort in descending and ascending order, I found that Chicago was in the 100th percentile for number of murders and Seattle was in the 1st percentile for number of murders. Using mutate to add a column for force size percentile and arrange again to sort in ascending order, I found that Seattle ranged between the 13th and 15th percentile for force size and Chicago ranged between the 93rd and 96th percentile for force size. I would have expected that murder cases and force size would be inversely related but it doesn’t seem to be the case. Using group_by to group by states, summarise to find the maximum change in murder total among the states and arrange to sort in descending order, I found that the state with the highest change in murder total was Maryland, which had an additional 133 murder cases in 2015 than in 2014; I also found that Massachusetts had the least change with 15 less murder cases in 2015 than in 2014.</p>
+<pre class="r"><code>m_pl %&gt;% filter(city == &quot;Houston&quot;)</code></pre>
+<pre><code>## # A tibble: 12 x 8
+##    city    state change year  total_murders force_size race      perc_in
+##    &lt;chr&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;
+##  1 Houston Texas     61 2014            242       7700 all         0.292
+##  2 Houston Texas     61 2014            242       7700 white       0.174
+##  3 Houston Texas     61 2014            242       7700 non_white   0.399
+##  4 Houston Texas     61 2014            242       7700 black       0.366
+##  5 Houston Texas     61 2014            242       7700 hispanic    0.457
+##  6 Houston Texas     61 2014            242       7700 asian       0.408
+##  7 Houston Texas     61 2015            303       7700 all         0.292
+##  8 Houston Texas     61 2015            303       7700 white       0.174
+##  9 Houston Texas     61 2015            303       7700 non_white   0.399
+## 10 Houston Texas     61 2015            303       7700 black       0.366
+## 11 Houston Texas     61 2015            303       7700 hispanic    0.457
+## 12 Houston Texas     61 2015            303       7700 asian       0.408</code></pre>
+<pre class="r"><code>m_pl %&gt;% filter(between(force_size, 2000, 3000))</code></pre>
+<pre><code>## # A tibble: 72 x 8
+##    city      state    change year  total_murders force_size race      perc_in
+##    &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;
+##  1 Baltimore Maryland    133 2014            211       2800 all         0.257
+##  2 Baltimore Maryland    133 2014            211       2800 white       0.133
+##  3 Baltimore Maryland    133 2014            211       2800 non_white   0.362
+##  4 Baltimore Maryland    133 2014            211       2800 black       0.391
+##  5 Baltimore Maryland    133 2014            211       2800 hispanic   NA    
+##  6 Baltimore Maryland    133 2014            211       2800 asian      NA    
+##  7 Baltimore Maryland    133 2015            344       2800 all         0.257
+##  8 Baltimore Maryland    133 2015            344       2800 white       0.133
+##  9 Baltimore Maryland    133 2015            344       2800 non_white   0.362
+## 10 Baltimore Maryland    133 2015            344       2800 black       0.391
+## # … with 62 more rows</code></pre>
+<pre class="r"><code>m_pl %&gt;% arrange(desc(city), change)</code></pre>
+<pre><code>## # A tibble: 324 x 8
+##    city       state change year  total_murders force_size race      perc_in
+##    &lt;chr&gt;      &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;
+##  1 Washington D.C.      57 2014            105       9340 all        0.116 
+##  2 Washington D.C.      57 2014            105       9340 white      0.0568
+##  3 Washington D.C.      57 2014            105       9340 non_white  0.157 
+##  4 Washington D.C.      57 2014            105       9340 black      0.170 
+##  5 Washington D.C.      57 2014            105       9340 hispanic   0.0899
+##  6 Washington D.C.      57 2014            105       9340 asian      0.231 
+##  7 Washington D.C.      57 2015            162       9340 all        0.116 
+##  8 Washington D.C.      57 2015            162       9340 white      0.0568
+##  9 Washington D.C.      57 2015            162       9340 non_white  0.157 
+## 10 Washington D.C.      57 2015            162       9340 black      0.170 
+## # … with 314 more rows</code></pre>
+<pre class="r"><code>m_pl %&gt;% select(city, total_murders, race, perc_in)</code></pre>
+<pre><code>## # A tibble: 324 x 4
+##    city      total_murders race      perc_in
+##    &lt;chr&gt;             &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;
+##  1 Baltimore           211 all         0.257
+##  2 Baltimore           211 white       0.133
+##  3 Baltimore           211 non_white   0.362
+##  4 Baltimore           211 black       0.391
+##  5 Baltimore           211 hispanic   NA    
+##  6 Baltimore           211 asian      NA    
+##  7 Baltimore           344 all         0.257
+##  8 Baltimore           344 white       0.133
+##  9 Baltimore           344 non_white   0.362
+## 10 Baltimore           344 black       0.391
+## # … with 314 more rows</code></pre>
+<pre class="r"><code>m_pl %&gt;% select(city, total_murders)</code></pre>
+<pre><code>## # A tibble: 324 x 2
+##    city      total_murders
+##    &lt;chr&gt;             &lt;dbl&gt;
+##  1 Baltimore           211
+##  2 Baltimore           211
+##  3 Baltimore           211
+##  4 Baltimore           211
+##  5 Baltimore           211
+##  6 Baltimore           211
+##  7 Baltimore           344
+##  8 Baltimore           344
+##  9 Baltimore           344
+## 10 Baltimore           344
+## # … with 314 more rows</code></pre>
+<pre class="r"><code>m_pl %&gt;% mutate(murder_pctile = ntile(total_murders, 100)) %&gt;% 
+    arrange(desc(murder_pctile))</code></pre>
+<pre><code>## # A tibble: 324 x 9
+##    city  state change year  total_murders force_size race  perc_in murder_pctile
+##    &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;         &lt;int&gt;
+##  1 Chic… Illi…     67 2015            478      12120 black   0.897           100
+##  2 Chic… Illi…     67 2015            478      12120 hisp…   0.840           100
+##  3 Chic… Illi…     67 2015            478      12120 asian   0.967           100
+##  4 Chic… Illi…     67 2015            478      12120 all     0.875            99
+##  5 Chic… Illi…     67 2015            478      12120 white   0.872            99
+##  6 Chic… Illi…     67 2015            478      12120 non_…   0.877            99
+##  7 Chic… Illi…     67 2014            411      12120 black   0.897            98
+##  8 Chic… Illi…     67 2014            411      12120 hisp…   0.840            98
+##  9 Chic… Illi…     67 2014            411      12120 asian   0.967            98
+## 10 Chic… Illi…     67 2014            411      12120 all     0.875            97
+## # … with 314 more rows</code></pre>
+<pre class="r"><code>m_pl %&gt;% mutate(murder_pctile = ntile(total_murders, 100)) %&gt;% 
+    arrange(murder_pctile)</code></pre>
+<pre><code>## # A tibble: 324 x 9
+##    city  state change year  total_murders force_size race  perc_in murder_pctile
+##    &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;         &lt;int&gt;
+##  1 Seat… Wash…     -3 2015             23       1445 all     0.118             1
+##  2 Seat… Wash…     -3 2015             23       1445 white   0.116             1
+##  3 Seat… Wash…     -3 2015             23       1445 non_…   0.122             1
+##  4 Seat… Wash…     -3 2015             23       1445 black   0.188             1
+##  5 Seat… Wash…     -3 2014             26       1445 all     0.118             2
+##  6 Seat… Wash…     -3 2014             26       1445 white   0.116             2
+##  7 Seat… Wash…     -3 2015             23       1445 hisp…   0                 2
+##  8 Seat… Wash…     -3 2015             23       1445 asian  NA                 2
+##  9 Seat… Wash…     -3 2014             26       1445 non_…   0.122             3
+## 10 Seat… Wash…     -3 2014             26       1445 black   0.188             3
+## # … with 314 more rows</code></pre>
+<pre class="r"><code>m_pl %&gt;% mutate(force_pctile = ntile(force_size, 100)) %&gt;% arrange(force_pctile)</code></pre>
+<pre><code>## # A tibble: 324 x 9
+##    city   state change year  total_murders force_size race  perc_in force_pctile
+##    &lt;chr&gt;  &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;        &lt;int&gt;
+##  1 St. L… Miss…     29 2014            159        950 all     0.589            1
+##  2 St. L… Miss…     29 2014            159        950 white   0.538            1
+##  3 St. L… Miss…     29 2014            159        950 non_…   0.671            1
+##  4 St. L… Miss…     29 2014            159        950 black   0.683            1
+##  5 St. L… Miss…     29 2014            159        950 hisp…  NA                2
+##  6 St. L… Miss…     29 2014            159        950 asian  NA                2
+##  7 St. L… Miss…     29 2015            188        950 all     0.589            2
+##  8 St. L… Miss…     29 2015            188        950 white   0.538            2
+##  9 St. L… Miss…     29 2015            188        950 non_…   0.671            3
+## 10 St. L… Miss…     29 2015            188        950 black   0.683            3
+## # … with 314 more rows</code></pre>
+<pre class="r"><code>m_pl %&gt;% summarise_all(n_distinct)</code></pre>
+<pre><code>## # A tibble: 1 x 8
+##    city state change  year total_murders force_size  race perc_in
+##   &lt;int&gt; &lt;int&gt;  &lt;int&gt; &lt;int&gt;         &lt;int&gt;      &lt;int&gt; &lt;int&gt;   &lt;int&gt;
+## 1    27    21     23     2            49         27     6     130</code></pre>
+<pre class="r"><code>m_pl %&gt;% group_by(state) %&gt;% summarise(mean_murders = mean(total_murders, 
+    na.rm = T))</code></pre>
+<pre><code>## # A tibble: 21 x 2
+##    state      mean_murders
+##    &lt;chr&gt;             &lt;dbl&gt;
+##  1 Arizona           113  
+##  2 California        118. 
+##  3 Colorado           42  
+##  4 D.C.              134. 
+##  5 Florida            78  
+##  6 Georgia            93.5
+##  7 Illinois          444. 
+##  8 Indiana           142  
+##  9 Louisiana         157  
+## 10 Maryland          278. 
+## # … with 11 more rows</code></pre>
+<pre class="r"><code>m_pl %&gt;% group_by(city) %&gt;% summarise(sd_murders = sd(total_murders, 
+    na.rm = T))</code></pre>
+<pre><code>## # A tibble: 27 x 2
+##    city       sd_murders
+##    &lt;chr&gt;           &lt;dbl&gt;
+##  1 Atlanta         0.522
+##  2 Baltimore      69.5  
+##  3 Boston          7.83 
+##  4 Chicago        35.0  
+##  5 Cincinnati      3.13 
+##  6 Cleveland      29.8  
+##  7 Dallas         10.4  
+##  8 Denver         11.5  
+##  9 Detroit         1.57 
+## 10 Houston        31.9  
+## # … with 17 more rows</code></pre>
+<pre class="r"><code>m_pl %&gt;% summarize(min_force_size = min(force_size, na.rm = T))</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   min_force_size
+##            &lt;dbl&gt;
+## 1            950</code></pre>
+<pre class="r"><code>m_pl %&gt;% group_by(state, race) %&gt;% summarise(mean_perc_in = mean(perc_in, 
+    na.rm = T))</code></pre>
+<pre><code>## # A tibble: 126 x 3
+## # Groups:   state [21]
+##    state      race      mean_perc_in
+##    &lt;chr&gt;      &lt;chr&gt;            &lt;dbl&gt;
+##  1 Arizona    all              0.312
+##  2 Arizona    asian          NaN    
+##  3 Arizona    black            0.522
+##  4 Arizona    hispanic         0.428
+##  5 Arizona    non_white        0.427
+##  6 Arizona    white            0.271
+##  7 California all              0.302
+##  8 California asian            0.436
+##  9 California black            0.371
+## 10 California hispanic         0.256
+## # … with 116 more rows</code></pre>
+<pre class="r"><code>m_pl %&gt;% group_by(state) %&gt;% summarise(max_change = max(change, 
+    na.rm = T)) %&gt;% arrange(desc(max_change))</code></pre>
+<pre><code>## # A tibble: 21 x 2
+##    state        max_change
+##    &lt;chr&gt;             &lt;dbl&gt;
+##  1 Maryland            133
+##  2 Illinois             67
+##  3 Texas                61
+##  4 D.C.                 57
+##  5 Ohio                 57
+##  6 Wisconsin            55
+##  7 Pennsylvania         32
+##  8 Missouri             29
+##  9 California           22
+## 10 Colorado             22
+## # … with 11 more rows</code></pre>
+<pre class="r"><code>m_pl %&gt;% group_by(state) %&gt;% summarise(n_distinct(city))</code></pre>
+<pre><code>## # A tibble: 21 x 2
+##    state      `n_distinct(city)`
+##    &lt;chr&gt;                   &lt;int&gt;
+##  1 Arizona                     1
+##  2 California                  3
+##  3 Colorado                    1
+##  4 D.C.                        1
+##  5 Florida                     1
+##  6 Georgia                     1
+##  7 Illinois                    1
+##  8 Indiana                     1
+##  9 Louisiana                   1
+## 10 Maryland                    1
+## # … with 11 more rows</code></pre>
+</div>
+<div id="correlation" class="section level2">
+<h2>Correlation</h2>
+<p>From the correlation heat map we can see that force_size and change have the least correlation; this means that the size of a police force is almost completely independent of the change in murder cases between 2014 and 2015. We can see that force_size and total-murders have the highest correlation; this means that the size of the number of murder cases is highly dependent on the size of the police force. As we have ascertained in the previous subsection, the size of the police force is possibly inversely related to number of murder cases.</p>
+<pre class="r"><code>m_pl_cor &lt;- m_pl %&gt;% select_if(is.numeric) %&gt;% cor(use = &quot;pair&quot;)
+
+m_pl_tidycor &lt;- m_pl_cor %&gt;% as.data.frame %&gt;% rownames_to_column(&quot;var1&quot;) %&gt;% 
+    pivot_longer(-1, names_to = &quot;var2&quot;, values_to = &quot;correlation&quot;)
+
+m_pl_tidycor</code></pre>
+<pre><code>## # A tibble: 16 x 3
+##    var1          var2          correlation
+##    &lt;chr&gt;         &lt;chr&gt;               &lt;dbl&gt;
+##  1 change        change              1    
+##  2 change        total_murders       0.502
+##  3 change        force_size          0.153
+##  4 change        perc_in             0.159
+##  5 total_murders change              0.502
+##  6 total_murders total_murders       1    
+##  7 total_murders force_size          0.604
+##  8 total_murders perc_in             0.380
+##  9 force_size    change              0.153
+## 10 force_size    total_murders       0.604
+## 11 force_size    force_size          1    
+## 12 force_size    perc_in             0.241
+## 13 perc_in       change              0.159
+## 14 perc_in       total_murders       0.380
+## 15 perc_in       force_size          0.241
+## 16 perc_in       perc_in             1</code></pre>
+<pre class="r"><code>m_pl_tidycor %&gt;% ggplot(aes(var1, var2, fill = correlation)) + 
+    geom_tile() + scale_fill_gradient2(low = &quot;red&quot;, mid = &quot;white&quot;, 
+    high = &quot;blue&quot;) + geom_text(aes(label = round(correlation, 
+    2)), color = &quot;black&quot;, size = 4) + theme(axis.text.x = element_text(angle = 90, 
+    hjust = 1)) + coord_fixed()</code></pre>
+<p><img src="../../project/project1_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>###Visualization using ggplot2</p>
+<p>To visualize the relationship between total murder cases and force size by state, I created a scatter plot using ggplot2. In this scatter plot, I colored the points by state. From this scatter plot, we can see that there is a positive relationship between total murders and force size; as force size increases, so does the total murder case. Also, it is evident that New York has the largest force size, with approximately 32500 police officers. Also, we can see that Illinois has the highest number of murder cases, with both 2014 and 2015 having over 400 cases.</p>
+<pre class="r"><code>library(ggplot2)
+str(m_pl)</code></pre>
+<pre><code>## tibble [324 × 8] (S3: tbl_df/tbl/data.frame)
+##  $ city         : chr [1:324] &quot;Baltimore&quot; &quot;Baltimore&quot; &quot;Baltimore&quot; &quot;Baltimore&quot; ...
+##  $ state        : chr [1:324] &quot;Maryland&quot; &quot;Maryland&quot; &quot;Maryland&quot; &quot;Maryland&quot; ...
+##  $ change       : num [1:324] 133 133 133 133 133 133 133 133 133 133 ...
+##  $ year         : chr [1:324] &quot;2014&quot; &quot;2014&quot; &quot;2014&quot; &quot;2014&quot; ...
+##  $ total_murders: num [1:324] 211 211 211 211 211 211 344 344 344 344 ...
+##  $ force_size   : num [1:324] 2800 2800 2800 2800 2800 2800 2800 2800 2800 2800 ...
+##  $ race         : chr [1:324] &quot;all&quot; &quot;white&quot; &quot;non_white&quot; &quot;black&quot; ...
+##  $ perc_in      : num [1:324] 0.257 0.133 0.362 0.391 NA ...</code></pre>
+<pre class="r"><code>ggplot(m_pl, aes(force_size, total_murders)) + geom_point(size = 2, 
+    aes(color = state)) + theme_grey() + ggtitle(&quot;Total Murders And Force Size According to States in U.S.A&quot;) + 
+    ylab(&quot;Total Murders&quot;) + xlab(&quot;Force Size&quot;)</code></pre>
+<p><img src="../../project/project1_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>To visualize the relationship between total murder cases and states by change in murder cases over 2014 and 2015, I created a bar chart using ggplot2. In this bar chart, I colored the bars by the “change” variable. From this bar chart, we can see that Maryland, New York, Michigan and Illinois had the highest number of murder cases. Also, Colorado, Massachusetts, Minnesota and Washington had the lowest murder cases. Furthermore, the lightness of the blue in the Maryland bar shows that there were over 100 more murder cases in 2015 compared to 2014. On the other hand, the darkness of the blue in the Massachusetts bar shows that there were less murder cases in 2015 compared to 2014.</p>
+<pre class="r"><code>ggplot(m_pl, aes(state, total_murders, fill = change)) + geom_bar(stat = &quot;summary&quot;, 
+    fun = mean) + geom_errorbar(stat = &quot;summary&quot;, fun.data = mean_se) + 
+    scale_x_discrete(limit = c(&quot;Arizona&quot;, &quot;California&quot;, &quot;Colorado&quot;, 
+        &quot;D.C.&quot;, &quot;Florida&quot;, &quot;Georgia&quot;, &quot;Illinois&quot;, &quot;Indiana&quot;, 
+        &quot;Louisiana&quot;, &quot;Maryland&quot;, &quot;Massachusetts&quot;, &quot;Michigan&quot;, 
+        &quot;Minnesota&quot;, &quot;Missouri&quot;, &quot;Nevada&quot;, &quot;New York&quot;, &quot;Ohio&quot;, 
+        &quot;Pennsylvania&quot;, &quot;Texas&quot;, &quot;Washington&quot;, &quot;Wisconsin&quot;), 
+        labels = c(&quot;AZ&quot;, &quot;CA&quot;, &quot;CO&quot;, &quot;DC&quot;, &quot;FL&quot;, &quot;GA&quot;, &quot;IL&quot;, 
+            &quot;IN&quot;, &quot;LA&quot;, &quot;MD&quot;, &quot;MA&quot;, &quot;MI&quot;, &quot;MN&quot;, &quot;MO&quot;, &quot;NV&quot;, &quot;NY&quot;, 
+            &quot;OH&quot;, &quot;PA&quot;, &quot;TX&quot;, &quot;WA&quot;, &quot;WI&quot;)) + theme_minimal() + 
+    ggtitle(&quot;Murders by State in U.S.A According to Change in Murder Count between Years&quot;) + 
+    ylab(&quot;Total Murders&quot;) + xlab(&quot;State&quot;)</code></pre>
+<p><img src="../../project/project1_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>###k-means/PAM clustering</p>
+<p>I decided to perform k-means/PAM clustering on total_murders and force_size. First, I ran the cluster package to prepare R for clustering. Next, I selected just total_murders and force_size and placed them in a new data frame which I save as “clust_dat”. Then, I used the silhouette width method to select the number of clusters to proceed with and I did this by making an empty vector to contain the silhouette width and then I worked out the kmeans solution, got the silhouette widths and took the averages of them. Using ggplot, I visualized the silhouette widths and found the elbow was at k=2. Next, I set my number of clusters as 2 and saved them into the “kmeans1” data frame. Then, using mutate, I saved my cluster assignment as a column in the clust_dat and saved this as a new data frame called “kmeansclust”. Lastly, I made a scatter plot of kmeansclust and colored the points by cluster. From the graph, we can see that cluster 1 ranges from about 20-210 total murders and about 100-10000 police officers within the force; cluster 2 ranges from about 240-480 total murders and about 2500-32500 police officers within the force.</p>
+<pre class="r"><code>library(tidyverse)
+library(cluster)
+
+# select variables for clustering
+clust_dat &lt;- m_pl %&gt;% dplyr::select(total_murders, force_size)
+
+# use silhouette width to select number of clusters
+sil_width &lt;- vector()
+for (i in 2:10) {
+    kms &lt;- kmeans(clust_dat, centers = i)
+    sil &lt;- silhouette(kms$cluster, dist(clust_dat))
+    sil_width[i] &lt;- mean(sil[, 3])
+}
+
+# visualize silhouette widths
+ggplot() + geom_line(aes(x = 1:10, y = sil_width)) + scale_x_continuous(name = &quot;k&quot;, 
+    breaks = 1:10)</code></pre>
+<p><img src="../../project/project1_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># set number of clusters
+kmeans1 &lt;- clust_dat %&gt;% scale %&gt;% kmeans(2)
+kmeans1</code></pre>
+<pre><code>## K-means clustering with 2 clusters of sizes 78, 246
+## 
+## Cluster means:
+##   total_murders force_size
+## 1     1.5539718  1.0595889
+## 2    -0.4927228 -0.3359672
+## 
+## Clustering vector:
+##   [1] 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2
+##  [38] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1
+##  [75] 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+##  [ reached getOption(&quot;max.print&quot;) -- omitted 224 entries ]
+## 
+## Within cluster sum of squares by cluster:
+## [1] 213.16174  69.41899
+##  (between_SS / total_SS =  56.3 %)
+## 
+## Available components:
+## 
+## [1] &quot;cluster&quot;      &quot;centers&quot;      &quot;totss&quot;        &quot;withinss&quot;     &quot;tot.withinss&quot;
+## [6] &quot;betweenss&quot;    &quot;size&quot;         &quot;iter&quot;         &quot;ifault&quot;</code></pre>
+<pre class="r"><code># save cluster assignment as a column in your data set
+kmeansclust &lt;- clust_dat %&gt;% mutate(cluster = as.factor(kmeans1$cluster))
+
+# graph showing final cluster assignment
+kmeansclust %&gt;% ggplot(aes(total_murders, force_size, color = cluster)) + 
+    geom_point()</code></pre>
+<p><img src="../../project/project1_files/figure-html/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+
+            
+        <hr>         <div class="related-posts">
+                <h5>Related Posts</h5>
+                
+              </div> 
+            </div>
+          </div>
+
+   <hr>  <div class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div> 
+        </div>
+      </div>
+    </div>
+
+    
+    <footer>
+  <div id="footer">
+    <div class="container">
+      <p class="text-muted">&copy; All rights reserved. Powered by <a href="https://gohugo.io/">Hugo</a> and
+      <a href="http://www.github.com/nurlansu/hugo-sustain/">sustain</a> with ♥</p>
+    </div>
+  </div>
+</footer>
+<div class="footer"></div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="../../js/docs.min.js"></script>
+<script src="../../js/main.js"></script>
+
+<script src="../../js/ie10-viewport-bug-workaround.js"></script>
+
+
+    
+  </body>
+</html>

@@ -1,0 +1,28 @@
+---
+title: Hello!
+author: 'Ozioma Akahara'
+date: '2021-05-09'
+slug: hello
+categories: []
+tags: []
+description: 'Hello!'
+---
+[Link to project 1](/project/project1/)
+
+[Link to google](https://www.google.com)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+```{R}
+summary(cars)
+plot(cars)
+```
+
+```{python}
+print("Hello!")
+x=1
+y=2
+x+y
+```

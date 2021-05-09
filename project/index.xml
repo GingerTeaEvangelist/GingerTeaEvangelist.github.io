@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Projects on Title</title>
+    <link>/project/</link>
+    <description>Recent content in Projects on Title</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language><atom:link href="/project/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>My Project 2</title>
+      <link>/project/project2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/project/project2/</guid>
+      <description>Introduction The two data sets I used are “murder_2015_final” and “police_locals”.The “murder_2015_final” data set (m15f) contained five variables (two character and three numeric), and it had eighty-three observations. After tidying, the number of variables remained five (three character and two numerical), and it had a hundred and sixty-six observations. The “police_locals” data set (pl) contained eight variables (one character and seven numeric), and it had seventy-five observations. After tidying, it had four variables (two character and two numerical), and it had four hundred and fifty observations.</description>
+    </item>
+    
+    <item>
+      <title>Project 1</title>
+      <link>/project/project1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/project/project1/</guid>
+      <description>Introduction The two data sets I used are “murder_2015_final” and “police_locals”.The “murder_2015_final” data set (m15f) contained five variables (two character and three numeric), and it had eighty-three observations. After tidying, the number of variables remained five (three character and two numerical), and it had a hundred and sixty-six observations. The “police_locals” data set (pl) contained eight variables (one character and seven numeric), and it had seventy-five observations. After tidying, it had four variables (two character and two numerical), and it had four hundred and fifty observations.</description>
+    </item>
+    
+  </channel>
+</rss>

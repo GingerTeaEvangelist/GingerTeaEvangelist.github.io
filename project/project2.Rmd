@@ -1,0 +1,337 @@
+---
+title: "My Project 2"
+author: "Ozioma Akahara (oaa847)"
+date: "4/27/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+The two data sets I used are "murder_2015_final" and "police_locals".The "murder_2015_final" data set (m15f) contained five variables (two character and three numeric), and it had eighty-three observations. After tidying, the number of variables remained five (three character and two numerical), and it had a hundred and sixty-six observations. The "police_locals" data set (pl) contained eight variables (one character and seven numeric), and it had seventy-five observations. After tidying, it had four variables (two character and two numerical), and it had four hundred and fifty observations. The "police_local" data set was acquired using calculations based on the U.S. Census, and this data set was interesting to me because it was compiled in response to the racially driven Ferguson protests that occurred in Missouri; the creators of the data set reasoned that if Ferguson had a huge racial gap in its population it should also be reflected in the police force assuming that they were locals. This reasoning caused the creators to compile a data set questioning the living situations of police in major cities. The "murder_2015_final" data set was acquired from the FBI crime data, this data was interesting to me because I was curious to see if total murders (from murder_2015_final data) would have an effect on force size (from police_locals data). For both data sets, I noticed that there were several variables that could be grouped together under a column. So for the "pl" data set, I used "pivot_longer" to group the variables: all, white, non_white, black, hispanic and asian,  under a new variable that I called "race" and I put their values in a new variable called "perc_in" which means the percentages of the police depending on race that are locals in their city; this new tidy data set was termed "pl_tidy". Then for the "m15f" data set, I used "pivot_longer" to group the variables: murders_2014, murders_2015, under a new variable that I called "year" and I used the "separate function" to rename the observations in the column into "2014" and "2015"; this new tidy data set was termed "m15f_tidy". I noticed after tidying this data set that the variable "year" was numeric, but I wanted it to be a character variable so I used 'as.character' to make it one. I performed an inner join on the tidy versions of the two data sets; I joined these data set by "city". This resulted in eight variables and three hundred and twenty-four observations; the joined data set was termed "m_pl". 
+
+```{R}
+library(fivethirtyeight)
+library(tidyverse)
+write_csv(murder_2015_final, "m15f.csv")
+getwd()
+m15f <- read_csv("m15f.csv")
+str(m15f)
+
+write_csv(police_locals, "pl.csv")
+getwd()
+pl <- read_csv("pl.csv")
+str(pl)
+
+pl_tidy <- pl %>% pivot_longer(all:asian, names_to = "race", values_to = "perc_in")
+str(pl_tidy)
+
+m15f_tidy <- m15f %>% pivot_longer(3:4, names_to = "years", values_to = "total_murders") %>% separate(years,into = c(NA,"year"), sep=8, convert=T)
+m15f_tidy$year <- as.character(m15f_tidy$year)
+str(m15f_tidy)
+
+m15f_tidy %>% inner_join(pl_tidy, by = "city")->m_pl
+str(m_pl)
+
+sapply(m_pl, mode)
+m_pl %>% distinct(state)
+
+```
+
+
+
+## MANOVA Test
+
+Using the dataset, I computed a MANOVA testing whether at least one of the four response variables (change, total_murders, force_size, perc_in) differs by race. I checked some assumptions, the multivariate normality and homogeneity, and found that normality and homogeneity were likely not met, as all the races had significant p-values and the correlation values were strange. However, the MANOVA test revealed that there was no significant mean difference across the different races (p=0.09003). Despite that, I still ran an ANOVA and found that force_size (p=0.01894) and perc_in (p=0.01215) were the significant response variables. So I ran a post-hoc test for both of these variables, it was a pairwise t-test. In all I ran 1 MANOVA, 4 ANOVAs, and 10 pairwise t-tests, so alpha = 0.003333333, which was still significant.Across this whole set of tests, the probability that I made at least one type I error is 0.5367088.The significance level needed to keep the overall type I error rate at .05 is 0.003333333.*
+ 
+
+```{R}
+library(dplyr)
+
+library(rstatix)
+group <- m_pl$race 
+DVs <- m_pl %>% select(change, total_murders, force_size, perc_in)
+sapply(split(DVs,group), mshapiro_test)
+
+lapply(split(DVs,group), cov) 
+
+man1<-manova(cbind(change, total_murders, force_size, perc_in)~race, data=m_pl)
+summary(man1)
+summary(aov(man1))
+pairwise.t.test(m_pl$force_size,m_pl$race,p.adj="none")
+pairwise.t.test(m_pl$perc_in,m_pl$race,p.adj="none")
+
+0.05/15
+
+#prob. of getting at least one type 1 error
+##prob of not getting a type 1 error = .95
+##prob of not getting a type 1 error 15 times 
+.95^15
+##prob of getting at least one type 1 error:
+1- (0.4632912)
+
+
+
+
+
+
+```
+
+
+## Randomization Test
+
+I performed a randomization test on my data that calculates the F-statistic 5000 times and finds the sampling distribution of F. The null hypothesis is that all the states have the same mean in force size, while the alternative hypothesis that the mean of force size is different among the states. The p-value from the randomization test is 0, meaning than none of the 5000 F-statistics generated under the null hypothesis were higher than the actual F-statistic. Therefore, I rejected the null hypothesis and concluded that the groups differ.
+
+```{R}
+library(dplyr)
+summary(aov(force_size~state,data=m_pl))
+obs_F <- 276.8#this is our observed F-statistic
+
+
+SSW<- m_pl%>%group_by(state)%>%summarize(SSW=sum((force_size-mean(force_size))^2))%>%summarize(sum(SSW))%>%pull
+
+SSB<- m_pl%>%mutate(mean=mean(force_size))%>%group_by(state)%>%mutate(groupmean=mean(force_size))%>% summarize(SSB=sum((mean-groupmean)^2))%>%summarize(sum(SSB))%>%pull
+
+SSB
+SSW
+
+Fs<-(SSB/20)/(SSW/303)
+Fs
+
+pf(Fs,df1=2, df2=27, lower.tail=F )
+plot(curve(df(x, 2,27)), type="line")
+
+
+mean(Fs>obs_F)
+
+```
+
+
+
+## Linear Regression Model
+
+I built a linear regression model predicting force size from total murders and year with their interaction. Since total_murders was my only numeric variable, I mean-centered it. 5088.90 is the mean/predicted force size for 2014 with average total murders. For forces with average total murders, 2015 had average/predicted force size that is 749.66 lower than 2014, the difference is not significant. Total murders was significantly associated with force size for 2014: for every 1-unit increase in total murder, predicted force size goes up by 34.25. I made a plot to test homoskedasticity, and found that the points fan out slightly, so my null hypothesis might have been met; but the assumptions of normality and linearity are not met. To test it more, I ran a Breuch-Pagan Test and found that it was significant (p=5.941e-13), therefore I rejected the null hypothesis of homoskedasticity and redid the regression using heteroskedasticity robust standard errors and found that t-statistic for total murders is now 8.302684, compared to the previous value of 13.7, while that of 2015 is now -1.35832 compared to -1.371999, and the p-values are now larger. 36.9% of the variation in the outcome is explained by this model.
+
+
+
+
+
+
+```{R}
+library(lmtest)
+library(sandwich)
+library(tidyverse)
+library(ggplot2)
+m_pl$total_murders_c <- m_pl$total_murders - mean( m_pl$total_murders, na.rm = T)
+fit<-lm(force_size ~ year + total_murders_c, data=m_pl)
+summary(fit)
+
+
+ggplot(m_pl, aes(x=total_murders_c, y=force_size,group=year))+geom_point(aes(color=year))+  geom_smooth(method="lm",formula=y~1,se=F,fullrange=T,aes(color=year))+theme(legend.position=c(.9,.19))
+
+plot(m_pl$total_murders_c,m_pl$force_size)
+bptest(fit)
+coeftest(fit, vcov = vcovHC(fit))[,1:2]
+
+#new t-statistic (Estimate/Standard error)
+34.24855/ 4.1249974
+-749.66261/551.904255
+
+#old t-stat
+34.25/2.50
+-749.66/546.40
+
+summary(fit)$r.sq
+```
+
+
+## Linear Regression Model with Interaction
+
+I built a linear regression model predicting force size from total murders and year with their interaction. Since total_murders was my only numeric variable, I mean-centered it.5137.631 is the mean/predicted force size for 2014 with average total murders. For forces with average total murders, 2015 had average/predicted force size that is 762.202 lower than 2014, the difference is not significant. Total murders was significantly associated with force size for 2014: for every 1-unit increase in total murder, predicted force size goes up by 38.701. Slope of total murders on force size for 2015 is 7.758 lower than for 2014 (not significant). After bootstrapping, the SEs for total murders (SE=3.756809) was in between the original SEs and the robust SEs from the previous section and the SEs for 2015 (SE=542.3384	) was lower than the original and robust SEs.Their t-statistics are probably larger and their p-values are probably smaller, making the slope likely significant.
+
+```{R}
+library(lmtest)
+library(sandwich)
+fit1<-lm(force_size ~ total_murders_c * year, data=m_pl)
+summary(fit1)
+
+resids<-fit1$residuals #using model fit from 1.2 
+fitted<-fit1$fitted.values  
+
+resid_resamp<-replicate(5000,{    new_resids<-sample(resids,replace=TRUE)     
+m_pl$new_force_size<-fitted+new_resids     
+fit3<-lm(new_force_size~total_murders_c * year,data=m_pl)    
+coef(fit3) })
+resid_resamp%>%t%>%as.data.frame%>%summarize_all(sd)
+
+
+
+
+```
+
+
+###Logistic Regression Model
+I fitted a logistic regression model predicting a whiteness as a race from force size and total murders. I wanted to use perc_in as a variable but the observations were not equal in number across the variables in the classification diagnostics so I stuck with total_murders. Controlling for total murders, there is no significant effect of force size on whether a cop is white. Also, controlling for force size, there is no significant effect of total murders on whether a cop is white. The odds ratio for force size on whiteness is 1.0000. The odds ratio for total murders on whiteness is 1.0000. This means that there is no association between whiteness and force size or total murders in a city.The accuracy is  0.8333333. The sensitivity is 0. The specificity is  0.8333333. The AUC is 0.5, which is bad; this also means that the True Positive Rate is equal to the False Positive Rate.  
+
+
+```{R}
+library(tidyverse)
+library(lmtest)
+library(plotROC)
+data<-m_pl%>%mutate(y=ifelse(race=="white",1,0)) 
+
+head(data)
+
+fit4<-glm(y~force_size+total_murders_c,data=data, family="binomial")
+
+coeftest(fit4)
+
+exp(coeftest(fit4))
+
+probs <- predict(fit4, type="response")
+
+table(predict=as.numeric(probs>.5), truth=data$y) %>% addmargins
+
+#accuracy 
+270/324
+#sensitivity
+0/54
+#specificity
+270/324
+
+ROCplot1<-ggplot(data)+geom_roc(aes(d=y,m=probs), n.cuts=0) 
+
+ROCplot1
+calc_auc(ROCplot1)
+data -> data1
+data1$logit<-predict(fit4,type="link") 
+data1$y<-as.factor(data$y)
+
+data1%>%ggplot()+geom_density(aes(logit,color=y,fill=y), alpha=.4)+
+  theme(legend.position=c(.85,.85))+geom_vline(xintercept=-1.6)+xlab("predictor (logit)")
+```
+
+
+
+
+
+
+###Logistic Regression Model with All Variables
+
+I performed a logistic regression predicting whiteness from all of the rest of my variables. The in-sample classification diagnostics are: The model had an accuracy of 0.8796992, a sensitivity of 0.4814815, a specificity of 0.9811321, a precision of 0.8666667, and an AUC of 0.8238994. It has a relatively high accuracy which means it is good at selecting race, however its sensitivity is low which means it's not so good in picking the correct race (white), on the other hand its specificity is really high which means it is good at picking the wrong race (all other race but white), and its AUC is relatively good but this is probably due to the high specificity.
+
+
+```{R}
+class_diag<-function(probs,truth){
+  
+  if(is.numeric(truth)==FALSE & is.logical(truth)==FALSE) truth<-as.numeric(truth)-1
+  
+  tab<-table(factor(probs>.5,levels=c("FALSE","TRUE")),truth)
+  prediction<-ifelse(probs>.5,1,0)
+  acc=mean(truth==prediction)
+  sens=mean(prediction[truth==1]==1)
+  spec=mean(prediction[truth==0]==0)
+  ppv=mean(truth[prediction==1]==1)
+  f1=2*(sens*ppv)/(sens+ppv)
+  
+  #CALCULATE EXACT AUC
+  ord<-order(probs, decreasing=TRUE)
+  probs <- probs[ord]; truth <- truth[ord]
+  
+  TPR=cumsum(truth)/max(1,sum(truth)) 
+  FPR=cumsum(!truth)/max(1,sum(!truth))
+  
+  dup<-c(probs[-1]>=probs[-length(probs)], FALSE)
+  TPR<-c(0,TPR[!dup],1); FPR<-c(0,FPR[!dup],1)
+  
+  n <- length(TPR)
+  auc<- sum( ((TPR[-1]+TPR[-n])/2) * (FPR[-1]-FPR[-n]) )
+
+  data.frame(acc,sens,spec,ppv,auc)
+}
+
+data %>% select( -total_murders_c, -race)-> data
+data %>% na.omit() -> data
+fit5<-glm(y~., data=data, family="binomial")
+
+probs1<-predict(fit5, type = "response")
+class_diag(probs1, data$y)
+
+
+```
+
+This 10-fold CV model had an accuracy of 0.7866097, and compared to the previous model that had 0.8796992 it is less accurate. It had a sensitivity of 0.2740079, and compared to the previous model that had 0.4814815 it is less sensitive. It had a specificity of 0.9203602, and compared to the previous model that had 0.9811321 it is slightly less specific. It had a precision of 0.4366667, and compared to the previous model that has 0.8666667 it is less precise. It had an AUC of 0.6681949, and compared to the previous model that had 0.8238994, this AUC is poor.
+
+```{R}
+#10-fold CV
+library(tidyverse)
+k=10
+
+data1 <-  data%>% sample_frac #put rows of dataset in random order
+folds <- ntile(1:nrow(data),n=10) #create fold labels
+
+diags<-NULL
+for(i in 1:k){
+  train <- data1[folds!=i,] #create training set (all but fold i)
+  test <- data1[folds==i,] #create test set (just fold i)
+  truth <- test$y #save truth labels from fold i
+  
+  fit6 <- glm(y~., data=train, family="binomial")
+  probs2 <- predict(fit6, newdata=test, type="response")
+  
+  diags<-rbind(diags,class_diag(probs2,truth))
+}
+
+summarize_all(diags,mean)
+
+
+```
+
+The only variable retained after performing a LASSO on the model is Baltimore city. Then I ran a classification diagnostic on this new model and found: It had an accuracy of 0.7969925, and compared to the in-sample model that had 0.8796992 it is less accurate. It had a sensitivity of 0, and compared to the in-sample model that had 0.4814815 it is not sensitive at all. It had a specificity of 1, and compared to the in-sample model that had 0.9811321 it is more specific. It had no precision, and compared to the in-sample model that has 0.8666667. It had an AUC of 0.5043676, and compared to the in-sample model that had 0.8238994, this AUC is bad. Compared to the logistic regression from the 10-fold CV, it is also lacking in sensitivity, precision and AUC, but it was better in accuracy and specificity.
+
+```{R}
+#Lasso
+
+library(glmnet)
+y<-as.matrix(data$y) 
+x<-model.matrix(fit5)[,-1] #grab predictors
+cv<-cv.glmnet(x,y,family="binomial")
+lasso<-glmnet(x,y,family="binomial",lambda=cv$lambda.1se)
+coef(lasso)
+
+
+lasso_dat <- data %>% mutate( Baltimore= ifelse(city=="Baltimore", 1, 0)) %>% select(Baltimore, y )
+
+fit7<-glm(y~.,data=lasso_dat, family="binomial") 
+probs3<-predict(fit7, type = "response")
+class_diag(probs3, lasso_dat$y)
+table(predict=as.numeric(probs3>.5),truth=lasso_dat$y)%>%addmargins
+
+
+library(tidyverse)
+k=10
+data1 <- lasso_dat %>% sample_frac 
+folds <- ntile(1:nrow(data),n=10) 
+
+diags<-NULL
+for(i in 1:k){  
+  train <- data1[folds!=i,]   
+  test <- data1[folds==i,]  
+  truth <- test$y 
+  
+  fit8 <- glm(y~., 
+             data=train, family="binomial")
+  probs4 <- predict(fit8, newdata=test, type="response")
+  
+  diags<-rbind(diags,class_diag(probs4,truth))
+}
+
+
+
+summarize_all(diags,mean)
+
+```
+
