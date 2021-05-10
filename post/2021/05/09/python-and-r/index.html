@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Ozioma Akahara" />
+    
+    <link rel="shortcut icon" type="image/x-icon" href="../../../../../img/favicon.ico">
+    <title>Python and R</title>
+    <meta name="generator" content="Hugo 0.83.1" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../../../../../css/main.css" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,200bold,400old" />
+    
+    <!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+    
+  </head>
+
+  <body>
+    <div id="wrap">
+      
+      <nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="../../../../../"><i class="fa fa-home"></i></a>
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="navbar-collapse collapse" id="navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+        <li><a href="../../../../../post/">BLOG</a></li>
+        
+        <li><a href="../../../../../projects/">PROJECTS</a></li>
+        
+        <li><a href="../../../../../resume/">RESUME</a></li>
+        
+      
+      </ul>
+    </div>
+  </div>
+</nav>
+
+      <div class="container">
+        <div class="blog-post">
+          <h3>
+            <strong><a href="../../../../../post/2021/05/09/python-and-r/">Python and R</a></strong>
+          </h3>
+        </div>
+ 
+<div class="blog-title">
+          <h4>
+         May 9, 2021 
+            &nbsp;&nbsp;
+            
+          </h4>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="blogpost">
+              
+
+
+<p><a href="../../../../../project/project1/">Link to project 1</a></p>
+<p><a href="https://www.google.com">Link to google</a></p>
+<p>####Visualizing</p>
+<p>Using ggplot to Visualize the highway miles travelled by the fuel type for different car types.</p>
+<p><img src="../../../../../post/2021-05-09-hello_files/cars.jpg" /></p>
+<pre class="r"><code>library(ggplot2)
+library(tidyverse)
+## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+## ✓ tibble  3.0.4     ✓ dplyr   1.0.2
+## ✓ tidyr   1.1.2     ✓ stringr 1.4.0
+## ✓ readr   1.4.0     ✓ forcats 0.5.0
+## ✓ purrr   0.3.4
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+mpg &lt;- as.data.frame(mpg)
+str(mpg)
+## &#39;data.frame&#39;:    234 obs. of  11 variables:
+##  $ manufacturer: chr  &quot;audi&quot; &quot;audi&quot; &quot;audi&quot; &quot;audi&quot; ...
+##  $ model       : chr  &quot;a4&quot; &quot;a4&quot; &quot;a4&quot; &quot;a4&quot; ...
+##  $ displ       : num  1.8 1.8 2 2 2.8 2.8 3.1 1.8 1.8 2 ...
+##  $ year        : int  1999 1999 2008 2008 1999 1999 2008 1999 1999 2008 ...
+##  $ cyl         : int  4 4 4 4 6 6 6 4 4 4 ...
+##  $ trans       : chr  &quot;auto(l5)&quot; &quot;manual(m5)&quot; &quot;manual(m6)&quot; &quot;auto(av)&quot; ...
+##  $ drv         : chr  &quot;f&quot; &quot;f&quot; &quot;f&quot; &quot;f&quot; ...
+##  $ cty         : int  18 21 20 21 16 18 18 18 16 20 ...
+##  $ hwy         : int  29 29 31 30 26 26 27 26 25 28 ...
+##  $ fl          : chr  &quot;p&quot; &quot;p&quot; &quot;p&quot; &quot;p&quot; ...
+##  $ class       : chr  &quot;compact&quot; &quot;compact&quot; &quot;compact&quot; &quot;compact&quot; ...
+ggplot(mpg, aes(fl, hwy, color = class))+
+  geom_point(alpha = .6)+
+  theme_test()+
+  ggtitle(&quot;Highway Miles Travelled by Fuel Type and Distinguished by Type of Car&quot;)+
+  labs(y=&quot;Highway MPG&quot;, x=&quot;Fuel Type&quot;)</code></pre>
+<p><img src="../../../../../post/2021-05-09-hello_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>####Practicing with Python</p>
+<p>Different Python functions and ways to use them.</p>
+<p><img src="../../../../../post/2021-05-09-hello_files/python.png" /></p>
+<pre class="python"><code>
+g=list(range(1,10,1))
+len(g)
+## 9
+max(g)
+## 9
+min(g)
+
+#Indexing
+## 1
+list1=[2,4,6,8]
+list2=[&#39;a&#39;,&#39;s&#39;,&#39;d&#39;,&#39;f&#39;]
+list1[3]
+## 8
+list2[2]
+## &#39;d&#39;
+list1[-2]
+
+#Lists
+## 6
+list1.reverse()
+list1
+## [8, 6, 4, 2]
+list2.append(3)
+list2
+## [&#39;a&#39;, &#39;s&#39;, &#39;d&#39;, &#39;f&#39;, 3]
+list3=list1+list2
+list3
+
+#Numpy
+## [8, 6, 4, 2, &#39;a&#39;, &#39;s&#39;, &#39;d&#39;, &#39;f&#39;, 3]
+import numpy as np
+h=np.array([2,4,6,8,10])
+h.shape
+## (5,)
+h
+
+#Strings
+## array([ 2,  4,  6,  8, 10])
+first = &quot;Ozioma&quot;
+last = &quot;Akahara&quot;
+first +&#39; &#39;+ last
+## &#39;Ozioma Akahara&#39;
+last[:5]+first[3:]+&#39; &#39;+first[:2]+last[4:]
+## &#39;Akahaoma Ozara&#39;</code></pre>
+<p>####Python and R Together</p>
+<p>I used the Reticulate package to play with Python and R together</p>
+<p>I did not have sexual relation with that woman</p>
+<p><img src="../../../../../post/2021-05-09-hello_files/Python_and_R.png" /></p>
+<pre class="r"><code>library(reticulate)
+What &lt;- &quot;woman&quot;
+important &lt;- &quot;with&quot;
+place &lt;- &quot;sexual&quot;
+Ms &lt;- &quot;not&quot;</code></pre>
+<pre class="python"><code>an = &quot;that&quot;
+work = &quot;relations&quot;
+we = &quot;have&quot;
+Lewinsky = &quot;did&quot;
+at = &quot;I&quot;
+
+print(at, Lewinsky, r.Ms, we, r.place, work, r.important, an, r.What)
+## I did not have sexual relations with that woman</code></pre>
+<p><img src="../../../../../post/2021-05-09-hello_files/lie.png" /></p>
+
+            
+        <hr>         <div class="related-posts">
+                <h5>Related Posts</h5>
+                
+              </div> 
+            </div>
+          </div>
+
+   <hr>  <div class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div> 
+        </div>
+      </div>
+    </div>
+
+    
+    <footer>
+  <div id="footer">
+    <div class="container">
+      <p class="text-muted">&copy; All rights reserved. Powered by <a href="https://gohugo.io/">Hugo</a> and
+      <a href="http://www.github.com/nurlansu/hugo-sustain/">sustain</a> with ♥</p>
+    </div>
+  </div>
+</footer>
+<div class="footer"></div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="../../../../../js/docs.min.js"></script>
+<script src="../../../../../js/main.js"></script>
+
+<script src="../../../../../js/ie10-viewport-bug-workaround.js"></script>
+
+
+    
+  </body>
+</html>
